@@ -1,19 +1,19 @@
-FROM python:3.4
-
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-	apt-get install -y git build-essential libcurl4-gnutls-dev libgnutls28-dev python3-dev && \
-	apt-get clean && \
-	rm -rf /var/lib/apt/lists/ /tmp/ /var/tmp/*
-	
-RUN sh -c "echo 'deb http://download.opensuse.org/repositories/home:/sebix:/intelmq/xUbuntu_16.04/ /' > /etc/apt/sources.list.d/home:sebix:intelmq.list" && \
-apt-get update -y && \
-apt-get install php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php apache2 intelmq -y --allow-unauthenticated && \
-chmod 777 /var/log/intelmq/intelmqctl.log && \
-echo "intelmq    ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers" && \
-echo "www-data    ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers" && \
-
+FROM ubuntu
 
 USER root
-RUN cd /var/www/html/ && git clone 'https://github.com/certtools/intelmq-manager.git' && chmod -R a+x . && service apache2 restart
-CMD ["sh", "/usr/bin/intelmqctl start"]
+#RUN cat /etc/*release
+RUN apt update -y 
+RUN apt upgrade -y 
+RUN apt install -y git build-essential libcurl4-gnutls-dev libgnutls28-dev python3-dev wget
+RUN apt clean 
+RUN apt install -y python3-pip python3-dnspython python3-psutil python3-redis python3-requests python3-termstyle python3-tz python3-dateutil
+RUN apt install -y git redis-server
+RUN rm -rf /var/lib/apt/lists/ /tmp/ /var/tmp/*
+	
+#RUN echo 'deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/home:sebix:intelmq:unstable.list
+#RUN apt update -y
+#RUN apt install intelmq -y 
+
+RUN wget "https://download.opensuse.org/repositories/home:/sebix:/intelmq/xUbuntu_18.04/all/intelmq_1.1.0-1_all.deb"
+
+RUN dpkg -i intelmq_1.1.0-1_all.deb
