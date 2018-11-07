@@ -43,16 +43,18 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 EXPOSE 80
 
 # Copy this repo into place.
-RUN cd /var/www/html/ && git clone https://www.github.com/certtools/intelmq-manager.git
+RUN cd /var/www/html/ && git clone https://github.com/SaGeApps/intelmq-manager.git
 RUN chmod -R a+x /var/www/html/
 RUN rm /var/www/html/index.html
 RUN usermod -G www-data root
-
+RUN echo 'www-data ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN cat /etc/sudoers
 # Update the default apache site with the config we created.
 ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
+RUN touch /var/log/intelmq/intelmqctl.log
+RUN chmod 777 /var/log/intelmq/intelmqctl.log
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
 CMD /usr/sbin/apache2ctl -D FOREGROUND
-
 
 
