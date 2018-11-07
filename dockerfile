@@ -52,9 +52,19 @@ RUN cat /etc/sudoers
 # Update the default apache site with the config we created.
 ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
 RUN touch /var/log/intelmq/intelmqctl.log
+
+RUN chmod 777 /etc/intelmq/BOTS
+RUN chmod 777 /etc/intelmq/defaults.conf
+RUN chmod 777 /etc/intelmq/harmonization.conf
+RUN chmod 777 /etc/intelmq/pipeline.conf
+RUN chmod 777 /etc/intelmq/runtime.conf
+RUN chmod 777 /var/www/html/intelmq-manager/debian/intelmq.conf
+RUN chmod 777 /var/www/html/intelmq-manager/debian/positions.conf
+
+
 RUN chmod 777 /var/log/intelmq/intelmqctl.log
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
 CMD /usr/sbin/apache2ctl -D FOREGROUND
-
+CMD redis-server 
 
