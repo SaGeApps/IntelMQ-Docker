@@ -3,20 +3,56 @@ FROM ubuntu
 USER root
 #RUN cat /etc/*release
 RUN export DEBIAN_FRONTEND=noninteractive
-RUN apt update -y 
-RUN apt upgrade -y 
-RUN apt install -y git build-essential libcurl4-gnutls-dev libgnutls28-dev python3-dev wget
-RUN apt clean 
-RUN DEBIAN_FRONTEND=noninteractive apt install -y python3-pip python3-dnspython python3-psutil python3-redis python3-requests python3-termstyle python3-dateutil python3-tz python3-openssl cron bash-completion jq systemd 
-RUN apt install -y git redis-server
+RUN apt-get update -y 
+RUN apt-get upgrade -y 
+RUN apt-get install -y git build-essential libcurl4-gnutls-dev libgnutls28-dev python3-dev wget
+RUN apt-get clean 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip python3-dnspython python3-psutil python3-redis python3-requests python3-termstyle python3-dateutil python3-tz python3-openssl cron bash-completion jq systemd apache2  php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php git redis-server curl sudo
 RUN rm -rf /var/lib/apt/lists/ /tmp/ /var/tmp/*
-	
-#RUN echo 'deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/home:sebix:intelmq:unstable.list
-#RUN apt update -y
-#RUN apt install intelmq -y 
 
 RUN wget "https://download.opensuse.org/repositories/home:/sebix:/intelmq/xUbuntu_18.04/all/intelmq_1.1.0-1_all.deb"
 
 RUN dpkg -i intelmq_1.1.0-1_all.deb
 RUN which intelmqctl
-RUN intelmqctl list bots
+
+#RUN ls -lR /var/www/html/ 
+
+#RUN add-apt-repository 'deb https://packages.ubuntu.com/bionic bionic main' 
+#sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/sebix:/intelmq/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/home:sebix:intelmq.list"
+
+RUN mkdir /tmp && chmod -R 777 /tmp
+#RUN cat /etc/apache2/sites-available/000-default.conf
+#ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
+
+
+RUN ls -als /var/www/html/
+
+
+## APACHE SERVER
+
+
+
+# Manually set up the apache environment variables
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
+
+# Expose apache.
+EXPOSE 80
+
+# Copy this repo into place.
+RUN cd /var/www/html/ && git clone https://www.github.com/certtools/intelmq-manager.git
+RUN chmod -R a+x /var/www/html/
+RUN rm /var/www/html/index.html
+RUN usermod -G www-data root
+
+# Update the default apache site with the config we created.
+ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
+
+# By default start up apache in the foreground, override with /bin/bash for interative.
+CMD /usr/sbin/apache2ctl -D FOREGROUND
+
+
+
