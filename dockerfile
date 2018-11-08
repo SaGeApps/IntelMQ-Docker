@@ -45,7 +45,7 @@ EXPOSE 80
 # Copy this repo into place.
 RUN cd /var/www/html/ && git clone https://github.com/SaGeApps/intelmq-manager.git
 RUN chmod -R a+x /var/www/html/
-RUN chown -R /var/www/html/ www-data
+RUN chown www-data -R /var/www/html/
 RUN rm /var/www/html/index.html
 RUN usermod -G www-data root
 RUN echo 'www-data ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -54,9 +54,9 @@ RUN cat /etc/sudoers
 ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
 RUN touch /var/log/intelmq/intelmqctl.log
 
-echo "alias python=python3" >> /etc/bash.bashrc 
-echo "alias intelmq=intelmqctl" >> /etc/bash.bashrc 
-echo "service apache2 restart" >> /etc/bash.bashrc 
+RUN echo "alias python=python3" >> /etc/bash.bashrc 
+RUN echo "alias intelmq=intelmqctl" >> /etc/bash.bashrc 
+RUN echo "service apache2 restart" >> /etc/bash.bashrc 
 
 RUN chmod 777 /etc/intelmq/BOTS
 RUN chmod 777 /etc/intelmq/defaults.conf
