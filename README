@@ -1,1 +1,2 @@
+docker build -t "sage:intelmq" .
 docker run -p 8081:80 -d sage:intelmq
