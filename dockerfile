@@ -54,9 +54,9 @@ RUN cat /etc/sudoers
 ADD apache.conf /etc/apache2/sites-enabled/000-default.conf
 RUN touch /var/log/intelmq/intelmqctl.log
 
-echo "alias python=python3" >> /etc/bash.bashrc 
-echo "alias intelmq=intelmqctl" >> /etc/bash.bashrc 
-echo "service apache2 restart" >> /etc/bash.bashrc 
+RUN echo "alias python=python3" >> /etc/bash.bashrc 
+RUN echo "alias intelmq=intelmqctl" >> /etc/bash.bashrc 
+RUN echo "service apache2 restart" >> /etc/bash.bashrc 
 
 RUN chmod 777 /etc/intelmq/BOTS
 RUN chmod 777 /etc/intelmq/defaults.conf
