@@ -7,7 +7,7 @@ RUN apt-get update -y
 RUN apt-get upgrade -y 
 RUN apt-get install -y git build-essential libcurl4-gnutls-dev libgnutls28-dev python3-dev wget
 RUN apt-get clean 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip python3-dnspython python3-psutil python3-redis python3-requests python3-termstyle python3-dateutil python3-tz python3-openssl cron bash-completion jq systemd apache2  php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php git redis-server curl sudo
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip python3-dnspython python3-psutil python3-redis python3-requests python3-termstyle python3-dateutil python3-tz python3-openssl cron bash-completion jq systemd apache2  php-pear php-fpm php-dev php-zip php-curl php-xmlrpc php-gd php-mysql php-mbstring php-xml libapache2-mod-php git redis-server curl sudo nano
 RUN rm -rf /var/lib/apt/lists/ /tmp/ /var/tmp/*
 
 RUN wget "https://download.opensuse.org/repositories/home:/sebix:/intelmq/xUbuntu_18.04/all/intelmq_1.1.0-1_all.deb"
@@ -65,11 +65,12 @@ RUN chmod 777 /etc/intelmq/pipeline.conf
 RUN chmod 777 /etc/intelmq/runtime.conf
 RUN chmod 777 /var/www/html/intelmq-manager/debian/intelmq.conf
 RUN chmod 777 /var/www/html/intelmq-manager/debian/positions.conf
-
+RUN usermod -G root intelmq
+RUN usermod -G root www-data
 
 RUN chmod 777 /var/log/intelmq/intelmqctl.log
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
-CMD /usr/sbin/apache2ctl -D FOREGROUND
 CMD redis-server 
+CMD /usr/sbin/apache2ctl -D FOREGROUND
 
