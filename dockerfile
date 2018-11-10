@@ -56,7 +56,7 @@ RUN touch /var/log/intelmq/intelmqctl.log
 
 RUN echo "alias python=python3" >> /etc/bash.bashrc 
 RUN echo "alias intelmq=intelmqctl" >> /etc/bash.bashrc 
-RUN echo "service apache2 restart" >> /etc/bash.bashrc 
+#RUN echo "service apache2 restart" >> /etc/bash.bashrc 
 
 RUN chmod 777 /etc/intelmq/BOTS
 RUN chmod 777 /etc/intelmq/defaults.conf
@@ -65,12 +65,13 @@ RUN chmod 777 /etc/intelmq/pipeline.conf
 RUN chmod 777 /etc/intelmq/runtime.conf
 RUN chmod 777 /var/www/html/intelmq-manager/debian/intelmq.conf
 RUN chmod 777 /var/www/html/intelmq-manager/debian/positions.conf
+RUN chmod 777 /var/run/intelmq/
 RUN usermod -G root intelmq
 RUN usermod -G root www-data
 
 RUN chmod 777 /var/log/intelmq/intelmqctl.log
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
-CMD redis-server 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
+CMD redis-server --daemonize yes
 
