@@ -72,6 +72,6 @@ RUN usermod -G root www-data
 RUN chmod 777 /var/log/intelmq/intelmqctl.log
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
-CMD /usr/sbin/apache2ctl -D FOREGROUND
-CMD redis-server --daemonize yes
+RUN echo "/usr/sbin/apache2ctl -D FOREGROUND" >> /etc/rc.local
+CMD redis-server 
 
